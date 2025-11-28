@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fruit Match Game</title>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #ffdfdf, #ffe8a8);
+        font-family: "Poppins", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+        touch-action: manipulation;
+    }
+
+    .game-container {
+        text-align: center;
+        animation: fadeIn 0.8s ease-in-out;
+        max-width: 500px;
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        font-size: 48px;
+        margin-bottom: 10px;
+        color: #ff3b3b;
+        text-shadow: 2px 2px 10px rgba(255, 0, 0, 0.3);
+    }
+
+    /* Buttons */
+    .top-buttons {
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    button {
+        padding: 10px 16px;
+        font-size: 16px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        background: #ff6b6b;
+        color: white;
+        transition: 0.2s ease;
+        flex: 1;
+        min-width: 120px;
+    }
+
+    button:hover {
+        background: #ff3b3b;
+        transform: scale(1.05);
+    }
+
+    .grid {
+        width: 100%;
+        max-width: 400px;
+        aspect-ratio: 1 / 1;
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 6px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 18px;
+        backdrop-filter: blur(6px);
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+        margin: 0 auto;
+        touch-action: none;
+    }
+
+    .cell {
+        width: 100%;
+        height: 100%;
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: white;
+        border-radius: 12px;
+        cursor: grab;
+        user-select: none;
+        transition: transform 0.15s, box-shadow 0.15s;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .cell:hover {
+        transform: scale(1.15);
+        box-shadow: 0 0 12px rgba(255, 0, 0, 0.25);
+    }
+
+    .dragging {
+        opacity: 0.4;
+        transform: scale(1.2);
+    }
+
+    .selected {
+        transform: scale(1.2);
+        box-shadow: 0 0 12px rgba(255, 0, 0, 0.5);
+    }
+
+    /* How to play popup */
+    #popup-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.4);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+    }
+
+    #popup-box {
+        background: white;
+        width: 300px;
+        padding: 20px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .score-container {
+        margin: 15px 0;
+        font-size: 20px;
+        font-weight: bold;
+        color: #ff3b3b;
+    }
+    
+    .timer-container {
+        margin: 15px 0;
+        font-size: 20px;
+        font-weight: bold;
+        color: #ff3b3b;
+    }
+    
+    .game-over {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 200;
+    }
+    
+    .game-over-content {
+        background: white;
+        width: 300px;
+        padding: 30px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    /* Mobile-specific styles */
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 36px;
+        }
+        
+        .grid {
+            max-width: 350px;
+        }
+        
+        .cell {
+            font-size: 20px;
+        }
+        
+        button {
+            padding: 8px 12px;
+            font-size: 14px;
+            min-width: 100px;
+        }
+        
+        .score-container, .timer-container {
+            font-size: 18px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="game-container">
+
+    <h1>🍎 Fruit Match 🍒</h1>
+    
+    <div class="score-container">Score: <span id="score">0</span></div>
+    <div class="timer-container">Time: <span id="timer">30</span>s</div>
+
+    <!-- Top Buttons -->
+    <div class="top-buttons">
+        <button onclick="showHowToPlay()">How to Play</button>
+        <button onclick="toggleMusic()">🔊 Music</button>
+        <button onclick="window.location.href='index.html'">⬅ Back</button>
+        <button onclick="resetGame()">🔄 Reset</button>
+    </div>
+
+    <div class="grid" id="grid"></div>
+</div>
+
+<!-- Popup -->
+<div id="popup-bg">
+    <div id="popup-box">
+        <h2>How to Play</h2>
+        <p>Drag and swap two adjacent fruits to match 3 or more of the same kind in a row or column.</p>
+        <p>On mobile: Tap one fruit, then tap an adjacent fruit to swap them.</p>
+        <p>Matches disappear and new fruits drop in from the top!</p>
+        <p>Score points for each match you make.</p>
+        <button onclick="closeHowToPlay()">Close</button>
+    </div>
+</div>
+
+<!-- Game Over Popup -->
+<div class="game-over" id="game-over">
+    <div class="game-over-content">
+        <h2>Time's Up!</h2>
+        <p>Your final score: <span id="final-score">0</span></p>
+        <button onclick="resetGame()">Play Again</button>
+    </div>
+</div>
+
+<!-- Background Music -->
+<audio id="bgMusic" loop>
+    <source src="https://assets.mixkit.co/music/preview/mixkit-game-show-suspense-waiting-667.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Match Sound Effect -->
+<audio id="matchSound">
+    <source src="./soccer-ball-kick-37625.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Swap Sound Effect -->
+<audio id="swapSound">
+    <source src="./trample-underfoot-409390.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Game Over Sound Effect -->
+<audio id="gameOverSound">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-retro-game-over-213.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    const grid = document.getElementById("grid");
+    const bgMusic = document.getElementById("bgMusic");
+    const matchSound = document.getElementById("matchSound");
+    const swapSound = document.getElementById("swapSound");
+    const gameOverSound = document.getElementById("gameOverSound");
+    const scoreElement = document.getElementById("score");
+    const timerElement = document.getElementById("timer");
+    const gameOverElement = document.getElementById("game-over");
+    const finalScoreElement = document.getElementById("final-score");
+    const fruits = ["🍎", "🍒", "🍇", "🍉", "🍓", "🥝"];
+    let dragSrcEl = null;
+    let selectedCell = null; // For mobile selection
+    let musicPlaying = false;
+    let score = 0;
+    let board = [];
+    let gameTimer;
+    let timeLeft = 30;
+    let gameActive = true;
+
+    // Initialize the game
+    function initGame() {
+        grid.innerHTML = '';
+        board = [];
+        score = 0;
+        scoreElement.textContent = score;
+        timeLeft = 30;
+        timerElement.textContent = timeLeft;
+        gameActive = true;
+        selectedCell = null;
+        
+        // Clear any existing timer
+        clearInterval(gameTimer);
+        
+        // Start the countdown timer
+        gameTimer = setInterval(updateTimer, 1000);
+        
+        // Create Game Board
+        for (let i = 0; i < 64; i++) {
+            const cell = document.createElement("div");
+            cell.classList.add("cell");
+            cell.setAttribute("data-index", i);
+            
+            // Assign random fruit ensuring no initial matches
+            let fruit;
+            do {
+                fruit = fruits[Math.floor(Math.random() * fruits.length)];
+            } while (hasInitialMatch(i, fruit));
+            
+            cell.textContent = fruit;
+            board.push(fruit);
+            cell.draggable = true;
+
+            // Events for desktop
+            cell.addEventListener("dragstart", handleDragStart);
+            cell.addEventListener("dragend", handleDragEnd);
+            cell.addEventListener("dragover", handleDragOver);
+            cell.addEventListener("drop", handleDrop);
+
+            // Events for mobile
+            cell.addEventListener("touchstart", handleTouchStart, { passive: false });
+            cell.addEventListener("touchmove", handleTouchMove, { passive: false });
+            cell.addEventListener("touchend", handleTouchEnd);
+
+            grid.appendChild(cell);
+        }
+        
+        // Hide game over screen
+        gameOverElement.style.display = "none";
+    }
+
+    // Update the timer
+    function updateTimer() {
+        if (!gameActive) return;
+        
+        timeLeft--;
+        timerElement.textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            endGame();
+        }
+    }
+
+    // End the game when timer runs out
+    function endGame() {
+        gameActive = false;
+        clearInterval(gameTimer);
+        
+        // Play game over sound
+        gameOverSound.play().catch(e => console.log("Game over audio play failed:", e));
+        
+        // Show game over screen
+        finalScoreElement.textContent = score;
+        gameOverElement.style.display = "flex";
+    }
+
+    // Check if placing a fruit would create an initial match
+    function hasInitialMatch(index, fruit) {
+        const row = Math.floor(index / 8);
+        const col = index % 8;
+        
+        // Check horizontal matches
+        if (col >= 2) {
+            const left1 = board[index - 1];
+            const left2 = board[index - 2];
+            if (left1 === fruit && left2 === fruit) return true;
+        }
+        
+        // Check vertical matches
+        if (row >= 2) {
+            const up1 = board[index - 8];
+            const up2 = board[index - 16];
+            if (up1 === fruit && up2 === fruit) return true;
+        }
+        
+        return false;
+    }
+
+    // Desktop drag and drop handlers
+    function handleDragStart(e) {
+        if (!gameActive) return;
+        
+        dragSrcEl = this;
+        this.classList.add("dragging");
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/html', this.innerHTML);
+    }
+
+    function handleDragEnd() {
+        this.classList.remove("dragging");
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        return false;
+    }
+
+    function handleDrop(e) {
+        if (!gameActive) return;
+        
+        e.stopPropagation();
+        
+        if (dragSrcEl !== this) {
+            // Play swap sound
+            swapSound.play().catch(e => console.log("Swap audio play failed:", e));
+            
+            // Get indices
+            const srcIndex = parseInt(dragSrcEl.getAttribute("data-index"));
+            const destIndex = parseInt(this.getAttribute("data-index"));
+            
+            // Check if cells are adjacent
+            if (areAdjacent(srcIndex, destIndex)) {
+                swapFruits(srcIndex, destIndex);
+            }
+        }
+        
+        return false;
+    }
+
+    // Mobile touch handlers
+    function handleTouchStart(e) {
+        if (!gameActive) return;
+        
+        e.preventDefault();
+        this.classList.add("selected");
+        selectedCell = this;
+    }
+
+    function handleTouchMove(e) {
+        if (!gameActive || !selectedCell) return;
+        
+        e.preventDefault();
+    }
+
+    function handleTouchEnd(e) {
+        if (!gameActive || !selectedCell) return;
+        
+        e.preventDefault();
+        
+        const touch = e.changedTouches[0];
+        const endElement = document.elementFromPoint(touch.clientX, touch.clientY);
+        
+        if (endElement && endElement.classList.contains("cell") && endElement !== selectedCell) {
+            const srcIndex = parseInt(selectedCell.getAttribute("data-index"));
+            const destIndex = parseInt(endElement.getAttribute("data-index"));
+            
+            // Check if cells are adjacent
+            if (areAdjacent(srcIndex, destIndex)) {
+                swapFruits(srcIndex, destIndex);
+            }
+        }
+        
+        // Reset selection
+        selectedCell.classList.remove("selected");
+        selectedCell = null;
+    }
+
+    // Swap fruits and check for matches
+    function swapFruits(srcIndex, destIndex) {
+        // Play swap sound
+        swapSound.play().catch(e => console.log("Swap audio play failed:", e));
+        
+        // Swap fruits
+        const temp = board[srcIndex];
+        board[srcIndex] = board[destIndex];
+        board[destIndex] = temp;
+        
+        // Update display
+        grid.children[srcIndex].textContent = board[srcIndex];
+        grid.children[destIndex].textContent = board[destIndex];
+        
+        // Check for matches
+        setTimeout(() => {
+            if (!checkMatches()) {
+                // No matches, swap back
+                const temp = board[srcIndex];
+                board[srcIndex] = board[destIndex];
+                board[destIndex] = temp;
+                
+                grid.children[srcIndex].textContent = board[srcIndex];
+                grid.children[destIndex].textContent = board[destIndex];
+            }
+        }, 300);
+    }
+
+    // Check if two cells are adjacent
+    function areAdjacent(index1, index2) {
+        const row1 = Math.floor(index1 / 8);
+        const col1 = index1 % 8;
+        const row2 = Math.floor(index2 / 8);
+        const col2 = index2 % 8;
+        
+        return (Math.abs(row1 - row2) === 1 && col1 === col2) || 
+               (Math.abs(col1 - col2) === 1 && row1 === row2);
+    }
+
+    // Check for matches and handle them
+    function checkMatches() {
+        let hasMatches = false;
+        const matches = new Set();
+        
+        // Check horizontal matches
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 6; col++) {
+                const index = row * 8 + col;
+                if (board[index] === board[index + 1] && board[index] === board[index + 2]) {
+                    matches.add(index);
+                    matches.add(index + 1);
+                    matches.add(index + 2);
+                    
+                    // Check for longer matches
+                    let next = index + 3;
+                    while (col < 5 && board[next] === board[index]) {
+                        matches.add(next);
+                        col++;
+                        next++;
+                    }
+                }
+            }
+        }
+        
+        // Check vertical matches
+        for (let col = 0; col < 8; col++) {
+            for (let row = 0; row < 6; row++) {
+                const index = row * 8 + col;
+                if (board[index] === board[index + 8] && board[index] === board[index + 16]) {
+                    matches.add(index);
+                    matches.add(index + 8);
+                    matches.add(index + 16);
+                    
+                    // Check for longer matches
+                    let next = index + 24;
+                    while (row < 5 && board[next] === board[index]) {
+                        matches.add(next);
+                        row++;
+                        next += 8;
+                    }
+                }
+            }
+        }
+        
+        // If matches found, remove them and update score
+        if (matches.size > 0) {
+            hasMatches = true;
+            
+            // Play match sound
+            matchSound.play().catch(e => console.log("Match audio play failed:", e));
+            
+            score += matches.size * 10;
+            scoreElement.textContent = score;
+            
+            // Remove matched fruits
+            matches.forEach(index => {
+                board[index] = null;
+                grid.children[index].textContent = '';
+            });
+            
+            // Drop fruits from above
+            setTimeout(dropFruits, 300);
+        }
+        
+        return hasMatches;
+    }
+
+    // Drop fruits from above to fill empty spaces
+    function dropFruits() {
+        for (let col = 0; col < 8; col++) {
+            let emptySpaces = 0;
+            
+            // Count empty spaces from bottom to top
+            for (let row = 7; row >= 0; row--) {
+                const index = row * 8 + col;
+                if (board[index] === null) {
+                    emptySpaces++;
+                } else if (emptySpaces > 0) {
+                    // Move fruit down
+                    const newIndex = (row + emptySpaces) * 8 + col;
+                    board[newIndex] = board[index];
+                    board[index] = null;
+                    grid.children[newIndex].textContent = board[newIndex];
+                    grid.children[index].textContent = '';
+                }
+            }
+            
+            // Fill top empty spaces with new fruits
+            for (let row = 0; row < emptySpaces; row++) {
+                const index = row * 8 + col;
+                board[index] = fruits[Math.floor(Math.random() * fruits.length)];
+                grid.children[index].textContent = board[index];
+            }
+        }
+        
+        // Check for new matches after dropping
+        setTimeout(() => {
+            if (checkMatches()) {
+                // Continue checking for matches
+            }
+        }, 300);
+    }
+
+    // Reset game
+    function resetGame() {
+        initGame();
+    }
+
+    // Popup Functions
+    function showHowToPlay() {
+        document.getElementById('popup-bg').style.display = "flex";
+    }
+    function closeHowToPlay() {
+        document.getElementById('popup-bg').style.display = "none";
+    }
+
+    // Music Toggle
+    function toggleMusic() {
+        if (!musicPlaying) {
+            bgMusic.play().catch(e => console.log("Audio play failed:", e));
+            musicPlaying = true;
+        } else {
+            bgMusic.pause();
+            musicPlaying = false;
+        }
+    }
+
+    // Initialize the game when page loads
+    window.onload = initGame;
+</script>
+
+</body>
+</html>
