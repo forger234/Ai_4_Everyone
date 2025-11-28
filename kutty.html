@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Story World - Interactive Stories for Children</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
+        }
+
+        :root {
+            --primary: #FF6B8B;
+            --secondary: #6C63FF;
+            --accent: #FFD166;
+            --light: #F9F7FE;
+            --dark: #2A2D3E;
+            --text: #4A4A68;
+            --success: #06D6A0;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f9f7fe 0%, #e6e9ff 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Back Button */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: var(--secondary);
+            transform: translateX(-3px);
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--dark);
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 209, 102, 0.4);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 209, 102, 0.6);
+        }
+
+        nav {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--dark);
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .story-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .story-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .story-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            overflow: hidden;
+        }
+
+        .story-image::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+        }
+
+        .story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .story-card:hover .story-image img {
+            transform: scale(1.05);
+        }
+
+        .story-content {
+            padding: 1.5rem;
+        }
+
+        .story-content h3 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+        }
+
+        .story-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .story-content p {
+            margin-bottom: 1rem;
+            display: -webkit-box;
+           
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .read-more {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .read-more i {
+            transition: transform 0.3s;
+        }
+
+        .read-more:hover i {
+            transform: translateX(5px);
+        }
+
+        .story-reader {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .story-reader.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .story-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 1rem;
+        }
+
+        .story-title {
+            color: var(--dark);
+            font-size: 2rem;
+        }
+
+        .close-story {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-story:hover {
+            transform: rotate(90deg);
+        }
+
+        .story-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            text-align: justify;
+        }
+
+        .story-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .control-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--light);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 1rem;
+        }
+
+        .control-btn:hover {
+            background: #e6e9ff;
+        }
+
+        .character {
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .interactive-element {
+            cursor: pointer;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .interactive-element:hover {
+            transform: scale(1.1);
+        }
+
+        .age-categories {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .age-btn {
+            background: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .age-btn.active, .age-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            .story-reader {
+                padding: 1.5rem;
+            }
+
+            .story-title {
+                font-size: 1.5rem;
+            }
+            
+            .back-button {
+                top: 10px;
+                left: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Back Button -->
+    <a href="index.html" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>Kids Story World</h1>
+                <p class="tagline">Where imagination comes to life with amazing stories!</p>
+                <a href="#stories" class="btn">Explore Stories</a>
+            </div>
+        </div>
+    </header>
+
+    
+
+    <section id="stories">
+        <div class="container">
+            <div class="section-title">
+                <h2>Amazing Stories for Kids</h2>
+                <p>Discover magical tales that spark imagination and teach valuable lessons</p>
+            </div>
+
+            
+
+            <div class="stories-grid">
+                <div class="story-card" data-story="1">
+                    <div class="story-image" style="background-color: #FFD166;">
+                        <img src="./star story.png" alt="The Little Star Who Couldn't Shine">
+                    </div>
+                    <div class="story-content">
+                        <h3>The Little Star Who Couldn't Shine</h3>
+                        <div class="story-meta">
+                            <span><i class="far fa-clock"></i> 5 min read</span>
+                            <span>Ages 3-5</span>
+                        </div>
+                        <p>Luna was a little star who couldn't shine as brightly as the others. But when the night sky needed her most, she discovered her own special light.</p>
+                        <a href="#" class="read-more">Read Story <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="story-card" data-story="2">
+                    <div class="story-image" >
+                        <img src="./garden story.png" alt="Oliver's Magical Garden">
+                    </div>
+                    <div class="story-content">
+                        <h3>Oliver's Magical Garden</h3>
+                        <div class="story-meta">
+                            <span><i class="far fa-clock"></i> 8 min read</span>
+                            <span>Ages 6-8</span>
+                        </div>
+                        <p>Oliver discovered a magical seed that grew into an extraordinary garden overnight, with flowers that sang and vegetables that told jokes.</p>
+                        <a href="#" class="read-more">Read Story <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="story-card" data-story="3">
+                    <div class="story-image">
+                        <img src="./turtle story.png" alt="The Brave Little Turtle" >
+                    </div>
+                    <div class="story-content">
+                        <h3>The Brave Little Turtle</h3>
+                        <div class="story-meta">
+                            <span><i class="far fa-clock"></i> 7 min read</span>
+                            <span>Ages 3-5</span>
+                        </div>
+                        <p>Timmy the turtle was afraid of the ocean's depths until a friendly dolphin showed him the wonders hidden beneath the waves.</p>
+                        <a href="#" class="read-more">Read Story <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-reader" id="story-reader">
+                <div class="story-header">
+                    <h2 class="story-title" id="story-title">The Little Star Who Couldn't Shine</h2>
+                    <div class="close-story" id="close-story">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="story-text" id="story-text">
+                    <!-- Story content will be inserted here -->
+                </div>
+                <div class="story-controls">
+                    <button class="control-btn" id="prev-btn"><i class="fas fa-arrow-left"></i> Previous</button>
+                    <button class="control-btn" id="next-btn">Next <i class="fas fa-arrow-right"></i></button>
+                    <button class="control-btn" id="sound-btn"><i class="fas fa-volume-up"></i> Sound</button>
+                    <button class="control-btn" id="bookmark-btn"><i class="fas fa-bookmark"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <script>
+        // Story data
+        const stories = {
+            1: {
+                title: "The Little Star Who Couldn't Shine",
+                content: `
+                    <p>Once upon a time, in the <span class="interactive-element" style="color: #6C63FF;">Twilight Galaxy</span>, there lived a little star named <span class="character" style="color: #FFD166;">Luna</span>.</p>
+                    
+                    <p>While all the other stars shone brightly, <span class="character" style="color: #FFD166;">Luna's</span> light was faint and flickery. The older stars told her she needed to practice shining, but no matter how hard she tried, her glow remained dim.</p>
+                    
+                    <p>"You'll never be a proper star," twinkled <span class="character" style="color: #FF6B8B;">Sirius</span>, the brightest star in the sky.</p>
+                    
+                    <p><span class="character" style="color: #FFD166;">Luna</span> felt sad and hid behind a passing cloud. "Why can't I shine like the others?" she wondered.</p>
+                    
+                    <p>One night, a little girl on Earth named <span class="character" style="color: #06D6A0;">Mia</span> was feeling sad because she had to move to a new city. Looking up at the sky, she noticed <span class="character" style="color: #FFD166;">Luna's</span> gentle, flickering light. Unlike the bold, bright stars, <span class="character" style="color: #FFD166;">Luna's</span> soft glow seemed to understand how <span class="character" style="color: #06D6A0;">Mia</span> felt.</p>
+                    
+                    <p><span class="character" style="color: #06D6A0;">Mia</span> whispered, "Little star, you're just like me - trying your best even when it's hard."</p>
+                    
+                    <p>Suddenly, <span class="character" style="color: #FFD166;">Luna</span> felt a warm feeling inside. She realized that her gentle light was special because it comforted those who felt small or scared. That night, <span class="character" style="color: #FFD166;">Luna</span> shone with a beautiful, soft light that touched hearts instead of blinding eyes.</p>
+                    
+                    <p>The next evening, <span class="character" style="color: #06D6A0;">Mia</span> looked for the little star again. "Thank you for listening," she said. "I feel better knowing you're up there."</p>
+                    
+                    <p>From then on, <span class="character" style="color: #FFD166;">Luna</span> became known as the "Comfort Star," and children all over the world would look for her gentle glow whenever they needed a friend in the sky. She learned that everyone has their own special kind of brightness - you just have to find where it fits.</p>
+                `,
+                age: "3-5",
+                duration: "5 min read"
+            },
+            2: {
+                title: "Oliver's Magical Garden",
+                content: `
+                    <p>One sunny morning, <span class="character" style="color: #06D6A0;">Oliver</span> was digging in his backyard when he found a peculiar seed. It was rainbow-colored and seemed to <span class="interactive-element" style="color: #6C63FF;">glow</span> with a soft light.</p>
+                    
+                    <p>He planted it in a small patch of soil near his bedroom window and watered it carefully. That night, as <span class="character" style="color: #06D6A0;">Oliver</span> slept, something magical happened.</p>
+                    
+                    <p>When he woke up the next morning, his entire backyard had transformed into a <span class="interactive-element" style="color: #FF6B8B;">magical garden</span>! The flowers sang cheerful songs, the vegetables told funny jokes, and the trees whispered secrets to each other.</p>
+                    
+                    <p>"Good morning, <span class="character" style="color: #06D6A0;">Oliver</span>!" chirped a <span class="character" style="color: #FFD166;">sunflower</span> with a bright yellow face. "Would you like to hear a song?"</p>
+                    
+                    <p><span class="character" style="color: #06D6A0;">Oliver</span> rubbed his eyes in disbelief. "You can talk?"</p>
+                    
+                    <p>"Of course!" said a <span class="character" style="color: #6C63FF;">carrot</span> popping out of the ground. "Why did the tomato turn red? Because it saw the salad dressing!"</p>
+                    
+                    <p><span class="character" style="color: #06D6A0;">Oliver</span> laughed so hard he almost fell over. He spent the whole day playing with his new plant friends.</p>
+                    
+                    <p>But as evening approached, the plants began to look sad. "What's wrong?" asked <span class="character" style="color: #06D6A0;">Oliver</span>.</p>
+                    
+                    <p>"We need to return to our magical realm," explained the <span class="character" style="color: #FFD166;">sunflower</span>. "But we'll leave you with a gift - the ability to make any garden happy with your kindness."</p>
+                    
+                    <p>The next morning, the magical garden was gone, but <span class="character" style="color: #06D6A0;">Oliver</span> noticed that all the plants in his neighborhood seemed brighter and healthier. He realized that the real magic was in caring for nature and sharing kindness with all living things.</p>
+                `,
+                age: "6-8",
+                duration: "8 min read"
+            },
+            3: {
+                title: "The Brave Little Turtle",
+                content: `
+                    <p>In a beautiful coral reef lived a young turtle named <span class="character" style="color: #06D6A0;">Timmy</span>. While his friends loved exploring the deep ocean, <span class="character" style="color: #06D6A0;">Timmy</span> preferred staying in the shallow waters where he felt safe.</p>
+                    
+                    <p>"Come with us, <span class="character" style="color: #06D6A0;">Timmy</span>!" called his friend <span class="character" style="color: #FF6B8B;">Finn</span> the fish. "The deep ocean is amazing!"</p>
+                    
+                    <p>But <span class="character" style="color: #06D6A0;">Timmy</span> would shake his head. "It's too dark and scary down there."</p>
+                    
+                    <p>One day, a friendly dolphin named <span class="character" style="color: #6C63FF;">Dolly</span> noticed <span class="character" style="color: #06D6A0;">Timmy</span> watching the other sea creatures venture into the deep. "What's stopping you from exploring?" she asked kindly.</p>
+                    
+                    <p>"I'm afraid," admitted <span class="character" style="color: #06D6A0;">Timmy</span>. "What if I get lost? What if there are monsters?"</p>
+                    
+                    <p><span class="character" style="color: #6C63FF;">Dolly</span> smiled. "How about I go with you? I know all the safe paths."</p>
+                    
+                    <p>With <span class="character" style="color: #6C63FF;">Dolly</span> by his side, <span class="character" style="color: #06D6A0;">Timmy</span> slowly ventured deeper than he'd ever been before. To his surprise, he discovered incredible wonders:</p>
+                    
+                    <ul>
+                        <li>Glowing jellyfish that lit up the dark waters</li>
+                        <li>Colorful coral castles taller than his home</li>
+                        <li>Friendly sea horses that danced in the currents</li>
+                        <li>Ancient shipwrecks filled with treasure</li>
+                    </ul>
+                    
+                    <p>"This is amazing!" exclaimed <span class="character" style="color: #06D6A0;">Timmy</span>. "I can't believe I was afraid of this beautiful place."</p>
+                    
+                    <p><span class="character" style="color: #6C63FF;">Dolly</span> nodded. "Sometimes the things we fear the most turn out to be the most wonderful adventures."</p>
+                    
+                    <p>From that day on, <span class="character" style="color: #06D6A0;">Timmy</span> became the reef's bravest explorer, always ready to discover new wonders and help other scared sea creatures overcome their fears.</p>
+                `,
+                age: "3-5",
+                duration: "7 min read"
+            }
+        };
+
+        // DOM elements
+        const storyCards = document.querySelectorAll('.story-card');
+        const storyReader = document.getElementById('story-reader');
+        const storyTitle = document.getElementById('story-title');
+        const storyText = document.getElementById('story-text');
+        const closeStory = document.getElementById('close-story');
+        const ageButtons = document.querySelectorAll('.age-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const soundBtn = document.getElementById('sound-btn');
+        const bookmarkBtn = document.getElementById('bookmark-btn');
+
+        // Current story tracking
+        let currentStoryId = 1;
+        const totalStories = Object.keys(stories).length;
+
+        // Open story when card is clicked
+        storyCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const storyId = card.getAttribute('data-story');
+                openStory(parseInt(storyId));
+            });
+        });
+
+        // Close story reader
+        closeStory.addEventListener('click', () => {
+            storyReader.classList.remove('active');
+        });
+
+        // Age category filtering
+        ageButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                ageButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // In a real implementation, this would filter the stories
+                alert(`Showing stories for: ${button.textContent}`);
+            });
+        });
+
+        // Navigation buttons
+        prevBtn.addEventListener('click', () => {
+            if (currentStoryId > 1) {
+                openStory(currentStoryId - 1);
+            } else {
+                alert("This is the first story!");
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStoryId < totalStories) {
+                openStory(currentStoryId + 1);
+            } else {
+                alert("This is the last story!");
+            }
+        });
+
+        // Sound button
+        let soundEnabled = false;
+        soundBtn.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundBtn.innerHTML = soundEnabled ? 
+                '<i class="fas fa-volume-mute"></i> Mute' : 
+                '<i class="fas fa-volume-up"></i> Sound';
+            
+            if (soundEnabled) {
+                // In a real implementation, this would play background music
+                alert("Story sounds enabled!");
+            } else {
+                alert("Story sounds disabled!");
+            }
+        });
+
+        // Bookmark button
+        bookmarkBtn.addEventListener('click', () => {
+            bookmarkBtn.innerHTML = '<i class="fas fa-bookmark"></i> Saved!';
+            setTimeout(() => {
+                bookmarkBtn.innerHTML = '<i class="fas fa-bookmark"></i> Save';
+            }, 2000);
+            alert("Story bookmarked!");
+        });
+
+        // Function to open a story
+        function openStory(storyId) {
+            currentStoryId = storyId;
+            const story = stories[storyId];
+            
+            storyTitle.textContent = story.title;
+            storyText.innerHTML = story.content;
+            storyReader.classList.add('active');
+            
+            // Scroll to story reader
+            storyReader.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Interactive elements in stories
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('interactive-element')) {
+                // Add fun interaction
+                e.target.style.transform = 'scale(1.2) rotate(5deg)';
+                setTimeout(() => {
+                    e.target.style.transform = 'scale(1) rotate(0deg)';
+                }, 300);
+                
+                // Play a sound effect in a real implementation
+                alert(`You discovered: ${e.target.textContent}`);
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

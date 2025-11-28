@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI for Everyone Kerala</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary: #2E86AB;
+            --secondary: #170669;
+            --accent: #F18F01;
+            --light: #F7F7F7;
+            --dark: #1A1A2E;
+            --success: #2E8B57;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Open Sans', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        section {
+            padding: 80px 0;
+        }
+        
+        h1, h2, h3, h4 {
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 2rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        nav ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(9, 9, 121, 0.7) 0%, rgba(0, 212, 255, 0.5) 100%);
+            z-index: -1;
+        }
+        
+        .hero .container {
+            max-width: 1200px;
+            padding: 0 20px;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #fff, #e0f7ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero h1 span {
+            color: #12d729;
+        } 
+        
+        .hero p:first-of-type {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            font-family: 'Montserrat', sans-serif;
+            color: #e0f7ff;
+        }
+        
+        .quote {
+            font-style: italic;
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+            font-weight: 400;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .hero-btns {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .hero .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: transparent;
+            color: #fff;
+            border: 2px solid #fff;
+            border-radius: 30px;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .hero .btn:hover {
+            background: #fff;
+            color: #090979;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* About Section */
+        .about {
+            background-color: white;
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 50px;
+        }
+        
+        .about-text {
+            flex: 1;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .about-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .approach-heading {
+            font-size: 1.4rem;
+            margin: 30px 0 20px;
+            color: var(--primary);
+            font-weight: 600;
+            text-align: center;
+            position: relative;
+        }
+        
+        .approach-list {
+            list-style: none;
+            margin: 30px 0;
+        }
+        
+        .approach-list li {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 15px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .approach-list strong {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+        
+        .image-stats-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: white;
+            border-radius: 10px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 15px;
+            min-width: 150px;
+            flex: 1;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: var(--dark);
+        }
+        
+        .typing-container {
+            position: relative;
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            background-color: var(--primary);
+            margin-left: 2px;
+            animation: blink 1s infinite;
+            height: 1.2em;
+            vertical-align: text-bottom;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .floating {
+            animation: floating 4s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        /* Why Section */
+        .why {
+            background-color: #f9f9f9;
+        }
+        
+        .reasons {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .reason-card {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+        
+        .reason-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .reason-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .reason-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        /* AI Tools Section */
+        .ai-tools {
+            background-color: white;
+            padding: 80px 0;
+            color: white;
+        }
+        
+        .ai-tools h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .ai-tools p {
+            font-size: 1.2rem;
+            margin-bottom: 50px;
+            color: var(--dark);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+        
+        .tools-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+        
+        .center-image {
+            position: relative;
+            max-width: 600px;
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .center-image:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+        
+        .main-ai-image {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .center-image:hover .main-ai-image {
+            transform: scale(1.05);
+        }
+        
+        .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 40px 20px 20px;
+            text-align: center;
+        }
+        
+        .image-overlay h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        .image-overlay p {
+            font-size: 1rem;
+            margin-bottom: 0;
+            color: #e0e0e0;
+        }
+        
+        /* Latest News Section */
+        .latest-news {
+            background-color: #f9f9f9;
+        }
+        
+        .news-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .news-header {
+            padding: 20px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .news-date {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .news-category {
+            background: var(--accent);
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .news-content {
+            padding: 20px;
+        }
+        
+        .news-content h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+        
+        .news-content p {
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .read-more {
+            display: inline-block;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 2px solid transparent;
+            transition: border-bottom 0.3s ease;
+        }
+        
+        .read-more:hover {
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .news-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .news-stat {
+            display: flex;
+            align-items: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .news-stat i {
+            margin-right: 5px;
+            color: var(--primary);
+        }
+        
+        /* Stories Section - FIXED */
+        .stories {
+            background-color: #f9f9f9;
+            padding: 80px 0;
+        }
+        
+        .story-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            padding: 20px 0;
+        }
+        
+        .story-card {
+            width: 100%;
+            max-width: 380px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .story-video {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+        }
+        
+        .story-video video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .story-video:hover .video-overlay {
+            opacity: 1;
+        }
+        
+        .video-link {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        
+        .story-video:hover .video-link {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .video-link:hover {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .story-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .story-content h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-size: 1.4rem;
+        }
+        
+        .story-content p {
+            color: #555;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        
+        .story-btn {
+            align-self: flex-start;
+            margin-top: auto;
+        }
+        
+        .games {
+            background-color: white;
+            padding: 80px 0;
+        }
+        
+        .games-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        .games h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            text-align: center;
+        }
+        
+        .games-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .game-image-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .game-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .game-image-container:hover .game-image {
+            transform: scale(1.03);
+        }
+        
+        .game-links {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .game-image-container:hover .game-links {
+            opacity: 1;
+        }
+        
+        /* Mobile-specific game links */
+        .mobile-game-links {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+        
+        .game-link {
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(46, 134, 171, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .game-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(46, 134, 171, 0.5);
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+        }
+        
+        .game-link:hover::before {
+            left: 100%;
+        }
+        
+        /* Mobile responsive styles */
+        @media (max-width: 768px) {
+            .games h2 {
+                font-size: 2.2rem;
+            }
+            
+            .game-image {
+                height: 300px;
+            }
+            
+            .game-links {
+                display: none; /* Hide hover-based links on mobile */
+            }
+            
+            .mobile-game-links {
+                display: flex; /* Show mobile-specific links */
+            }
+            
+            .game-link {
+                width: 100%;
+                padding: 12px 15px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .games h2 {
+                font-size: 1.8rem;
+            }
+            
+            .game-image {
+                height: 250px;
+            }
+        }
+        
+        /* Partners Section */
+        .partners {
+            background-color: #f9f9f9;
+        }
+        
+        .partner-logos {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .partner-logo {
+            width: 150px;
+            height: 80px;
+            background-color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 10px;
+        }
+        
+        .partner-logo img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .footer-column h3 {
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+            
+            h2 {
+                font-size: 2.2rem;
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            }
+            
+            nav ul.show {
+                display: flex;
+            }
+            
+            nav ul li {
+                margin: 10px 0;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .hero {
+                padding: 150px 0 80px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            section {
+                padding: 60px 0;
+            }
+            
+            .hero p:first-of-type {
+                font-size: 1.4rem;
+            }
+            
+            .quote {
+                font-size: 1rem;
+            }
+            
+            .hero-btns {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero .btn {
+                width: 200px;
+                margin: 10px 0;
+            }
+            
+            .ai-tools h2 {
+                font-size: 2.2rem;
+            }
+            
+            .ai-tools p {
+                font-size: 1.1rem;
+            }
+            
+            .center-image {
+                max-width: 90%;
+            }
+            
+            .main-ai-image {
+                height: 250px;
+            }
+            
+            .image-overlay h3 {
+                font-size: 1.5rem;
+            }
+            
+            .games h2 {
+                font-size: 2.2rem;
+            }
+            
+            .game-image {
+                height: 300px;
+            }
+            
+            .game-links {
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .game-link {
+                width: 90%;
+                padding: 12px 15px;
+                font-size: 1rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .ai-tools {
+                padding: 60px 0;
+            }
+            
+            .ai-tools h2 {
+                font-size: 1.8rem;
+            }
+            
+            .main-ai-image {
+                height: 200px;
+            }
+            
+            .image-overlay {
+                padding: 30px 15px 15px;
+            }
+            
+            .image-overlay h3 {
+                font-size: 1.3rem;
+            }
+            
+            .games h2 {
+                font-size: 1.8rem;
+            }
+            
+            .game-image {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                AI for Everyone
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#why">Why AI?</a></li>
+                    <li><a href="#tools">AI Tools</a></li>
+                    <li><a href="./news.html">Latest News</a></li>
+                    <li><a href="#games">Games</a></li>
+                    <li><a href="#stories">Stories</a></li>
+                    <li><a href="#partners">Partners</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <video autoplay muted loop class="video-background">
+            <source src="./1764228072304.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="overlay"></div>
+        <div class="container">
+            <h1>AI for<span> Kerala</span></h1>
+            <p>A Statewide Initiative for AI Literacy</p>
+            <p class="quote">"We have a historical opportunity and responsibility to establish a human-centred framework for AI research, education, practice and policy." - Fei-Fei Li, Stanford University & Co-Founder of AI4ALL</p>
+            <div class="hero-btns">
+                <a href="#about" class="btn">Learn More</a>
+                <a href="#partners" class="btn">Partner With Us</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="floating">About the Initiative</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p class="typing-container" id="text1"></p>
+                    <p class="typing-container" id="text2"></p>
+                    
+                    <h3 class="approach-heading">Our Holistic Approach</h3>
+                    <ul class="approach-list">
+                        <li>
+                            <strong><i class="fas fa-brain"></i> Head: Understanding AI</strong>
+                            <span class="typing-container" id="text3"></span>
+                        </li>
+                        <li>
+                            <strong><i class="fas fa-handshake"></i> Hand: Building with AI</strong>
+                            <span class="typing-container" id="text4"></span>
+                        </li>
+                        <li>
+                            <strong> <i class="fas fa-heart"></i> Heart: Shaping AI's Future</strong>
+                            <span class="typing-container" id="text5"></span>
+                        </li>
+                    </ul>
+                    
+                    <a href="./ai.html" class="btn">Learn About AI</a>
+                </div>
+                <div class="image-stats-container">
+                    <div class="about-image floating">
+                        <img src="./initiative.jpg" alt="AI Technology">
+                    </div>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-number">100K+</div>
+                            <div class="stat-label">Keralites Empowered</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label">AI Projects</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">3Y</div>
+                            <div class="stat-label">Roadmap</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Section -->
+    <section id="why" class="why">
+        <div class="container">
+            <h2>Why Kerala Needs AI Literacy Now</h2>
+            <div class="reasons">
+                <div class="reason-card">
+                    <img src="./community-learning.jpg" alt="Community Learning">
+                    <h3>Literacy for All & Global Model</h3>
+                    <p>Equitable AI education that empowers every citizen to understand and apply AI responsibly. As Kerala pioneered digital literacy before, we can position ourselves as a global model for AI education rooted in social responsibility and community well-being.</p>
+                </div>
+                <div class="reason-card">
+                    <img src="./create.jpg" alt="Creators">
+                    <h3>Creators, Not Just Consumers</h3>
+                    <p>Enabling Keralites to innovate and build AI-driven solutions, not just use them. We aim to reach at least one lakh learners across Kerala in the first phase.</p>
+                </div>
+                <div class="reason-card">
+                    <img src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1174&q=80" alt="Knowledge Sharing">
+                    <h3>Knowledge as a Public Good</h3>
+                    <p>Making AI knowledge a public good, accessible to all, with an emphasis on open, grassroots-first, multilingual, and equitable approaches, where every individual becomes both a learner and a teacher.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Tools Section -->
+    <section id="tools" class="ai-tools">
+        <div class="container">
+            <h2>Explore AI Tools</h2>
+            <p>Click on centre to discover the power of artificial intelligence</p>
+            <div class="tools-container">
+                <a href="home.html" class="center-image">
+                    <img src="./AI-research-tool-comp.jpg" alt="AI Tools Visualization" class="main-ai-image">
+                    <div class="image-overlay">
+                        <h3>Discover AI Tools</h3>
+                        <p>Explore our collection of AI tools and resources</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section - FIXED -->
+     <section id="games" class="games">
+        <div class="container">
+            <div class="games-container">
+                <h2>AI Learning Games</h2>
+                <div class="games-content">
+                    <div class="game-image-container">
+                        <img src="./game.jpg" alt="AI Learning Games" class="game-image">
+                        <div class="game-links">
+                            <a href="crush.html" class="game-link">Candy Crush</a>
+                            <a href="catch.html" class="game-link">Ball Catcher</a>
+                            <a href="lumina.html" class="game-link">Lumina Pop</a>
+                            <a href="memory.html" class="game-link">Memory Match</a>
+                            <a href="puzzle.html" class="game-link">Fix It</a>
+                        </div>
+                    </div>
+                    <!-- Mobile-specific game links -->
+                    <div class="mobile-game-links">
+                        <a href="crush.html" class="game-link">Candy Crush</a>
+                        <a href="catch.html" class="game-link">Ball Catcher</a>
+                        <a href="lumina.html" class="game-link">Lumina Pop</a>
+                        <a href="memory.html" class="game-link">Memory Match</a>
+                        <a href="puzzle.html" class="game-link">Fix It</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stories Section - FIXED -->
+   <section id="stories" class="stories">
+        <div class="container">
+            <h2>Inspiring AI Stories</h2>
+            <div class="story-cards">
+                <!-- Video for Kids -->
+                <div class="story-card">
+                    <div class="story-video">
+                        <video  loop muted autoplay >
+                            <source src="./kid.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="video-overlay">
+                            <a href="./kutty.html" class="video-link">Read Kids Stories</a>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <h3>AI Adventures for Kids</h3>
+                        <!-- <p>Fun and educational stories about children exploring the world of artificial intelligence in creative ways.</p> -->
+                        <!-- <a href="kids-stories.html" class="btn story-btn">Explore More</a> -->
+                    </div>
+                </div>
+                
+                <!-- Video for Young Adults -->
+                <div class="story-card">
+                    <div class="story-video">
+                        <video  loop muted autoplay >
+                            <source src="./young.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="video-overlay">
+                            <a href="./young.html" class="video-link">Read Youth Stories</a>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <h3>AI Innovation for Youth</h3>
+                        <!-- <p>Young innovators using AI to create solutions for real-world challenges. Be inspired by their creativity!</p> -->
+                        <!-- <a href="youth-stories.html" class="btn story-btn">Explore More</a> -->
+                    </div>
+                </div>
+                
+                <!-- Video for Seniors -->
+                <div class="story-card">
+                    <div class="story-video">
+                        <video  loop muted autoplay >
+                            <source src="./old.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="video-overlay">
+                            <a href="./old.html" class="video-link">Read Senior Stories</a>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <h3> AI for Seniors</h3>
+                        <!-- <p>Discover how seniors are embracing AI technology to enhance their daily lives and stay connected.</p> -->
+                        <!-- <a href="seniors-stories.html" class="btn story-btn">Explore More</a> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Partners Section -->
+    <section id="partners" class="partners">
+        <div class="container">
+            <h2>Our Partners</h2>
+            <p>AI for Everyone is designed to be collaborative and inclusive. TinkerHub acts as the enabler and host of this campaign, holding space for partners and communities to lead, learn, and build together.</p>
+            
+            <h3 style="margin-top: 40px;">How You Can Partner</h3>
+            <div class="reasons">
+                <div class="reason-card">
+                    <i class="fas fa-book"></i>
+                    <h3>Knowledge Partners</h3>
+                    <p>Share expertise through workshops, mentorship, and curriculum development.</p>
+                </div>
+                <div class="reason-card">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <h3>Financial Partners</h3>
+                    <p>Sponsor programs, resources, and scaling to new districts.</p>
+                </div>
+                <div class="reason-card">
+                    <i class="fas fa-bullhorn"></i>
+                    <h3>Media & Outreach Partners</h3>
+                    <p>Amplify our reach through traditional and digital media.</p>
+                </div>
+            </div>
+            
+            <div class="partner-logos">
+                <div class="partner-logo">
+                    <i class="fas fa-university" style="font-size: 2rem; color: var(--primary);"></i>
+                </div>
+                <div class="partner-logo">
+                    <i class="fas fa-school" style="font-size: 2rem; color: var(--primary);"></i>
+                </div>
+                <div class="partner-logo">
+                    <i class="fas fa-building" style="font-size: 2rem; color: var(--primary);"></i>
+                </div>
+                <div class="partner-logo">
+                    <i class="fas fa-hands-helping" style="font-size: 2rem; color: var(--primary);"></i>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="#" class="btn">Become a Partner</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>AI for Everyone Kerala</h3>
+                    <p>A statewide initiative to democratize AI knowledge and make Kerala a global model for responsible AI.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#why">Why AI?</a></li>
+                        <li><a href="#tools">AI Tools</a></li>
+                        <li><a href="./news.html">Latest News</a></li>
+                        <li><a href="#games">Games</a></li>
+                        <li><a href="#stories">Stories</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Programs</h3>
+                    <ul>
+                        <li><a href="#">KuttyMakers (Ages 10-17)</a></li>
+                        <li><a href="#">Young Makers</a></li>
+                        <li><a href="#">Friends of the Movement</a></li>
+                        <li><a href="#">Workshops</a></li>
+                        <li><a href="#">Study Jams</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> TinkerHub Foundation, Kerala</li>
+                        <li><i class="fas fa-envelope"></i> info@aiforeveryone.kerala</li>
+                        <li><i class="fas fa-phone"></i> +91 98765 43210</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 AI for Everyone Kerala. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            document.querySelector('nav ul').classList.toggle('show');
+        });
+
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                // Close mobile menu after clicking a link
+                if (window.innerWidth <= 768) {
+                    document.querySelector('nav ul').classList.remove('show');
+                }
+            });
+        });
+
+        // Typing animation function
+        function typeText(element, text, speed = 40) {
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    // Add a small random delay to make typing more natural
+                    const delay = speed + (Math.random() * 20 - 10);
+                    
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, delay);
+                } else {
+                    // Add blinking cursor after typing is complete
+                    const cursor = document.createElement('span');
+                    cursor.classList.add('cursor');
+                    element.appendChild(cursor);
+                }
+            }
+            
+            type();
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // New updated texts to type
+            const text1 = "The 'AI for All Keralites' initiative, powered by TinkerHub, is a groundbreaking statewide movement to democratize artificial intelligence education across Kerala. Building upon our state's proud legacy of near-total literacy and digital empowerment, we're creating an inclusive ecosystem where every citizen can thrive in the AI era.";
+            const text2 = "This comprehensive program addresses critical challenges: bridging the AI skills gap for students, preparing our workforce for technological transformation, combating AI misinformation, and positioning Kerala as a global model for responsible, human-centric AI development.";
+            const text3 = "Grasp AI fundamentals, understand its real-world implications, and develop critical thinking to navigate the AI landscape responsibly and effectively.";
+            const text4 = "Get hands-on experience with AI tools, develop practical projects, and create innovative solutions to local challenges using cutting-edge technology.";
+            const text5 = "Foster a culture of knowledge sharing, mentor the next generation, and collectively shape an AI future that reflects Kerala's values of equity and social justice.";
+            
+            // Start typing animations with delays
+            setTimeout(() => typeText(document.getElementById('text1'), text1), 500);
+            setTimeout(() => typeText(document.getElementById('text2'), text2), 4000);
+            setTimeout(() => typeText(document.getElementById('text3'), text3), 8000);
+            setTimeout(() => typeText(document.getElementById('text4'), text4), 10000);
+            setTimeout(() => typeText(document.getElementById('text5'), text5), 12000);
+            
+            // Add hover effect to stats
+            const stats = document.querySelectorAll('.stat-item');
+            stats.forEach(stat => {
+                stat.addEventListener('mouseenter', () => {
+                    stat.style.transform = 'translateY(-8px)';
+                });
+                
+                stat.addEventListener('mouseleave', () => {
+                    stat.style.transform = 'translateY(0)';
+                });
+            });
+        });
+
+        // Optional: Add touch detection for better mobile experience
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if device is touch-enabled
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            
+            if (isTouchDevice) {
+                // Add a class to body for touch-specific styling if needed
+                document.body.classList.add('touch-device');
+                
+                // Optional: Add tap functionality to game image on mobile
+                const gameImageContainer = document.querySelector('.game-image-container');
+                if (gameImageContainer) {
+                    gameImageContainer.addEventListener('click', function() {
+                        // Scroll to mobile game links when image is tapped on mobile
+                        document.querySelector('.mobile-game-links').scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

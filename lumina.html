@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina Pop - Mini Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* UI Overlay */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .score-board {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            pointer-events: auto;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 10px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            animation: glow 2s infinite alternate;
+        }
+
+        .lives {
+            display: flex;
+            gap: 5px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 10px 15px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .heart {
+            color: #ff4757;
+            font-size: 1.5rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Back Button */
+        #back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            z-index: 30;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #back-button:hover {
+            background: rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        #back-button:active {
+            transform: translateY(0);
+        }
+
+        /* Instructions Panel */
+        #instructions-panel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 90%;
+            width: 400px;
+            z-index: 25;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.5s ease-out;
+            pointer-events: auto;
+        }
+
+        #instructions-panel.hidden {
+            display: none;
+        }
+
+        .instructions-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            margin-top: 0;
+            background: linear-gradient(to right, #00d2ff, #3a7bd5);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        .instructions-content {
+            margin-bottom: 20px;
+        }
+
+        .bubble-example {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .bubble-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 15px;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .bubble-good-icon {
+            background: radial-gradient(circle at 30% 30%, #4facfe, #00f2fe);
+        }
+
+        .bubble-rare-icon {
+            background: radial-gradient(circle at 30% 30%, #d4fc79, #96e6a1);
+        }
+
+        .bubble-bad-icon {
+            background: radial-gradient(circle at 30% 30%, #ff0844, #ffb199);
+        }
+
+        .controls-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Screens */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            transition: opacity 0.3s;
+            pointer-events: auto;
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 4rem;
+            margin: 0;
+            background: linear-gradient(to right, #00d2ff, #3a7bd5);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(58, 123, 213, 0.5);
+            animation: titleGlow 3s infinite alternate;
+        }
+
+        p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            font-family: 'Fredoka One', cursive;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #ff00cc, #333399);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.1s, box-shadow 0.1s;
+            pointer-events: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:active {
+            transform: scale(0.95);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .secondary-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            font-size: 1.2rem;
+            padding: 12px 25px;
+        }
+
+        /* Game Elements */
+        #game-area {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.3), 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+            will-change: transform, top;
+            animation: float 3s infinite ease-in-out;
+            pointer-events: auto;
+        }
+
+        .bubble::after {
+            content: '';
+            width: 30%;
+            height: 15%;
+            background: rgba(255,255,255,0.4);
+            position: absolute;
+            top: 15%;
+            left: 20%;
+            border-radius: 50%;
+            transform: rotate(-45deg);
+        }
+
+        .bubble-good {
+            background: radial-gradient(circle at 30% 30%, #4facfe, #00f2fe);
+            box-shadow: 0 0 15px #00f2fe;
+        }
+
+        .bubble-rare {
+            background: radial-gradient(circle at 30% 30%, #d4fc79, #96e6a1);
+            box-shadow: 0 0 15px #96e6a1;
+            animation: rareGlow 2s infinite alternate;
+        }
+
+        .bubble-bad {
+            background: radial-gradient(circle at 30% 30%, #ff0844, #ffb199);
+            box-shadow: 0 0 15px #ff0844;
+            border: 2px solid #5c0000;
+            animation: shake 0.5s infinite alternate;
+        }
+
+        /* Particle Effects */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: fadeOut 0.8s forwards;
+        }
+
+        /* Animations */
+        @keyframes fadeOut {
+            to { opacity: 0; transform: scale(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(0, 210, 255, 0.5); }
+            100% { box-shadow: 0 0 20px rgba(0, 210, 255, 0.8); }
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 20px rgba(58, 123, 213, 0.5); }
+            100% { text-shadow: 0 0 30px rgba(58, 123, 213, 0.8), 0 0 40px rgba(58, 123, 213, 0.6); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes rareGlow {
+            0% { box-shadow: 0 0 15px #96e6a1; }
+            100% { box-shadow: 0 0 25px #d4fc79, 0 0 35px #96e6a1; }
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(-2px); }
+            100% { transform: translateX(2px); }
+        }
+
+        @keyframes slideIn {
+            0% { transform: translate(-50%, -60%); opacity: 0; }
+            100% { transform: translate(-50%, -50%); opacity: 1; }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+            
+            .score-board {
+                font-size: 1.5rem;
+            }
+            
+            button {
+                font-size: 1.2rem;
+                padding: 12px 30px;
+            }
+            
+            .secondary-button {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+            
+            #instructions-panel {
+                width: 90%;
+                padding: 20px;
+            }
+            
+            .instructions-title {
+                font-size: 1.5rem;
+            }
+            
+            #back-button {
+                font-size: 0.9rem;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-area"></div>
+
+    <button id="back-button" onclick="goBack()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 12H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Back
+    </button>
+
+    <div id="ui-layer">
+        <div class="score-board">Score: <span id="score">0</span></div>
+        <div class="lives" id="lives-container">
+            <div class="heart">♥</div>
+            <div class="heart">♥</div>
+            <div class="heart">♥</div>
+        </div>
+    </div>
+
+    <div id="instructions-panel" class="hidden">
+        <h2 class="instructions-title">HOW TO PLAY</h2>
+        <div class="instructions-content">
+            <div class="bubble-example">
+                <div class="bubble-icon bubble-good-icon"></div>
+                <div>Tap blue bubbles for +1 point</div>
+            </div>
+            <div class="bubble-example">
+                <div class="bubble-icon bubble-rare-icon"></div>
+                <div>Tap green bubbles for +5 points</div>
+            </div>
+            <div class="bubble-example">
+                <div class="bubble-icon bubble-bad-icon"></div>
+                <div>Avoid red bubbles - lose 1 life</div>
+            </div>
+            <p>Don't let good bubbles float away or you'll lose lives!</p>
+            <div class="controls-info">
+                <div>Desktop: Click bubbles</div>
+                <div>Mobile: Tap bubbles</div>
+            </div>
+        </div>
+        <button onclick="hideInstructions()">GOT IT!</button>
+    </div>
+
+    <div id="start-screen" class="screen">
+        <h1>LUMINA POP</h1>
+        <p>Pop the colorful bubbles but be careful - some are dangerous!</p>
+        <button onclick="startGame()">PLAY NOW</button>
+        <div class="button-group">
+            <button class="secondary-button" onclick="showInstructions()">HOW TO PLAY</button>
+        </div>
+    </div>
+
+    <div id="game-over-screen" class="screen hidden">
+        <h1>GAME OVER</h1>
+        <p>Your Final Score: <span id="final-score">0</span></p>
+        <button onclick="startGame()">PLAY AGAIN</button>
+        <div class="button-group">
+            <button class="secondary-button" onclick="showInstructions()">INSTRUCTIONS</button>
+        </div>
+    </div>
+
+    <script>
+        const gameArea = document.getElementById('game-area');
+        const scoreEl = document.getElementById('score');
+        const finalScoreEl = document.getElementById('final-score');
+        const livesContainer = document.getElementById('lives-container');
+        const startScreen = document.getElementById('start-screen');
+        const gameOverScreen = document.getElementById('game-over-screen');
+        const instructionsPanel = document.getElementById('instructions-panel');
+        const backButton = document.getElementById('back-button');
+
+        let score = 0;
+        let lives = 3;
+        let isPlaying = false;
+        let spawnRate = 1000;
+        let bubbleSpeed = 3;
+        let gameLoop;
+        let spawner;
+        let difficultyTimer;
+
+        // Sound Context (Simple Synthesis to keep file standalone)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function goBack() {
+            // Navigate back to story.htm
+            window.location.href = 'index.html';
+        }
+        
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            if (type === 'pop') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'bad') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+                osc.frequency.linearRampToValueAtTime(50, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'rare') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.2);
+            }
+        }
+
+        function showInstructions() {
+            instructionsPanel.classList.remove('hidden');
+        }
+
+        function hideInstructions() {
+            instructionsPanel.classList.add('hidden');
+        }
+
+        function startGame() {
+            // Reset State
+            score = 0;
+            lives = 3;
+            spawnRate = 1000;
+            bubbleSpeed = 2; // Starting speed
+            isPlaying = true;
+
+            // UI Updates
+            scoreEl.innerText = score;
+            updateLivesUI();
+            startScreen.classList.add('hidden');
+            gameOverScreen.classList.add('hidden');
+            instructionsPanel.classList.add('hidden');
+            gameArea.innerHTML = ''; // Clear board
+
+            // Loops
+            spawner = setTimeout(spawnBubble, spawnRate);
+            gameLoop = requestAnimationFrame(updateGame);
+            
+            // Increase difficulty every 5 seconds
+            difficultyTimer = setInterval(() => {
+                if(spawnRate > 300) spawnRate -= 50;
+                bubbleSpeed += 0.2;
+            }, 5000);
+        }
+
+        function updateLivesUI() {
+            livesContainer.innerHTML = '';
+            for(let i=0; i<lives; i++) {
+                livesContainer.innerHTML += '<div class="heart">♥</div>';
+            }
+        }
+
+        function gameOver() {
+            isPlaying = false;
+            clearTimeout(spawner);
+            cancelAnimationFrame(gameLoop);
+            clearInterval(difficultyTimer);
+            finalScoreEl.innerText = score;
+            gameOverScreen.classList.remove('hidden');
+        }
+
+        function createParticles(x, y, color) {
+            for (let i = 0; i < 8; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.background = color;
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                
+                const size = Math.random() * 10 + 5;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+
+                // Random direction
+                const tx = (Math.random() - 0.5) * 100;
+                const ty = (Math.random() - 0.5) * 100;
+                
+                particle.style.transform = `translate(${tx}px, ${ty}px)`;
+                particle.style.transition = 'transform 0.8s ease-out, opacity 0.8s';
+
+                gameArea.appendChild(particle);
+
+                // Trigger animation next frame
+                requestAnimationFrame(() => {
+                    particle.style.transform = `translate(${tx}px, ${ty}px) scale(0)`;
+                });
+
+                setTimeout(() => particle.remove(), 800);
+            }
+        }
+
+        function spawnBubble() {
+            if (!isPlaying) return;
+
+            const bubble = document.createElement('div');
+            const size = Math.random() * 40 + 40; // 40px to 80px
+            const startX = Math.random() * (window.innerWidth - size);
+            
+            bubble.classList.add('bubble');
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = startX + 'px';
+            bubble.style.top = window.innerHeight + 'px';
+
+            // Determine type
+            const rand = Math.random();
+            let type = 'good';
+            if (rand > 0.85) {
+                type = 'bad';
+                bubble.classList.add('bubble-bad');
+            } else if (rand > 0.75) {
+                type = 'rare'; // Gives double points
+                bubble.classList.add('bubble-rare');
+            } else {
+                bubble.classList.add('bubble-good');
+            }
+
+            bubble.dataset.type = type;
+            bubble.dataset.speed = bubbleSpeed + (Math.random()); // Slight speed variation
+
+            // Interaction
+            bubble.addEventListener('mousedown', handleInput);
+            bubble.addEventListener('touchstart', handleInput, {passive: true});
+
+            function handleInput(e) {
+                if(!isPlaying) return;
+                e.stopPropagation(); // Prevent hitting elements behind
+                
+                const rect = bubble.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                if (type === 'bad') {
+                    lives--;
+                    playSound('bad');
+                    updateLivesUI();
+                    bubble.remove();
+                    createParticles(centerX, centerY, '#ff0844');
+                    if(lives <= 0) gameOver();
+                } else {
+                    score += (type === 'rare' ? 5 : 1);
+                    playSound(type === 'rare' ? 'rare' : 'pop');
+                    scoreEl.innerText = score;
+                    createParticles(centerX, centerY, type === 'rare' ? '#d4fc79' : '#00f2fe');
+                    bubble.remove();
+                }
+            }
+
+            gameArea.appendChild(bubble);
+
+            // Schedule next spawn
+            spawner = setTimeout(spawnBubble, spawnRate);
+        }
+
+        function updateGame() {
+            if (!isPlaying) return;
+
+            const bubbles = document.querySelectorAll('.bubble');
+            
+            bubbles.forEach(bubble => {
+                let currentTop = parseFloat(bubble.style.top);
+                const speed = parseFloat(bubble.dataset.speed);
+                
+                currentTop -= speed;
+                bubble.style.top = currentTop + 'px';
+
+                // Check if bubble floated off screen
+                if (currentTop < -100) {
+                    if (bubble.dataset.type !== 'bad') {
+                        lives--;
+                        updateLivesUI();
+                        if(lives <= 0) gameOver();
+                    }
+                    bubble.remove();
+                }
+            });
+
+            gameLoop = requestAnimationFrame(updateGame);
+        }
+    </script>
+</body>
+</html>

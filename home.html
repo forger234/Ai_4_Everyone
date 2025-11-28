@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tools Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0e17, #1a1a2e);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .boxes {
+            height: 80vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #circle {
+            width: 8vmin;
+            height: 8vmin;
+            background-color: transparent;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: all 2s;
+            opacity: 1;
+            border-radius: 50%;
+        }
+
+        .box {
+            border: solid;
+            border-color: transparent;
+            border-radius: 10px;
+            background-color: white;
+            color: transparent;
+            height: 2px;
+            width: 2px;
+            text-align: center;
+            align-content: center;
+            position: absolute;
+            transition: all 2s;  
+            font-size: 1;
+            box-shadow: 0 0 10px #6C63FF, 0 0 20px #6C63FF; 
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .box i {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #star {
+            color: #6C63FF;
+            font-size: 55px;
+            position: absolute;
+            border: none;
+            background-color: transparent;
+            rotate: 0deg;
+            transition: all 1s; 
+            cursor: pointer;
+            z-index: 10;
+            top: 50vh;
+            left: 50vw;
+            transform: translate(-50%, -50%);
+            /* Removed scale animation - star stays constant size */
+        }
+
+        #star:active {
+            color: gray;
+        }
+
+        #star i {
+            background: none;
+            background-color: transparent;
+        }
+
+        #star i:active {
+            scale: 0.9;
+        }
+
+        i {
+            scale: 75%;
+            background: none;
+            background-color: transparent;
+        }
+
+        i:active {
+            scale: 50%;
+        }
+
+        /* Projecting hover effect */
+        .box:hover {
+            transform: translateZ(50px) scale(1.3);
+            z-index: 20;
+            box-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
+        }
+
+        .box:nth-child(1) {
+            top: 15%;
+            left: 45%;
+        }
+
+        .box:nth-child(2) {
+            top: 25%;
+            right: 25%;  
+        }
+
+        .box:nth-child(3) {
+            bottom: 45%;
+            right: 15%;  
+        }
+
+        .box:nth-child(4) {
+            bottom: 25%;
+            right: 25%;  
+        }
+
+        .box:nth-child(5) {
+            bottom: 15%;
+            left: 45%;  
+        }
+
+        .box:nth-child(6) {
+            bottom: 25%;
+            left: 25%;  
+        }
+
+        .box:nth-child(7) {
+            bottom: 45%;
+            left: 15%;  
+        }
+
+        .box:nth-child(8) {
+            top: 25%;
+            left: 25%;
+        }
+
+        .ani {
+            animation: tra 1s linear 2s forwards;
+        }
+
+        .ani i {
+            animation: fadeIn 0.5s 2s forwards;
+        }
+
+        /* Tool Info Panel */
+        .tool-info {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 500px;
+            background: rgba(30, 30, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 2px solid #6C63FF;
+        }
+
+        .tool-info h2 {
+            margin-bottom: 15px;
+            color: #6C63FF;
+            font-size: 1.8rem;
+        }
+
+        .tool-info p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+
+        .tool-info .btn {
+            background: linear-gradient(135deg, #6C63FF, #FF6B6B);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin: 10px;
+        }
+
+        .tool-info .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.4);
+        }
+
+        .back-btn {
+            background: transparent;
+            color: #6C63FF;
+            border: 2px solid #6C63FF;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .back-btn:hover {
+            background: #6C63FF;
+            color: white;
+        }
+
+        /* Header */
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 5;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #6C63FF, #FF6B6B);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Footer */
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 5;
+        }
+
+        .footer a {
+            color: #6C63FF;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }
+
+        .footer a:hover {
+            background: rgba(108, 99, 255, 0.2);
+        }
+
+        /* Animations */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes tra {
+            0% { height: 5px; width: 0px; font-size: 0; }
+            50% { height: 25px; width: 5px; font-size: medium; }
+            100% { height: 40px; width: 40px; font-size: xx-large; }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Background Animation */
+        .bg-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .bg-animation span {
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: rgba(108, 99, 255, 0.2);
+            box-shadow: 0 0 10px rgba(108, 99, 255, 0.5),
+                        0 0 20px rgba(108, 99, 255, 0.3),
+                        0 0 30px rgba(108, 99, 255, 0.2);
+            border-radius: 50%;
+            animation: animate 15s linear infinite;
+            bottom: -150px;
+        }
+
+        .bg-animation span:nth-child(1) {
+            left: 25%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 0s;
+        }
+
+        .bg-animation span:nth-child(2) {
+            left: 10%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 2s;
+            animation-duration: 12s;
+        }
+
+        .bg-animation span:nth-child(3) {
+            left: 70%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 4s;
+        }
+
+        .bg-animation span:nth-child(4) {
+            left: 40%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 0s;
+            animation-duration: 18s;
+        }
+
+        .bg-animation span:nth-child(5) {
+            left: 65%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 0s;
+        }
+
+        .bg-animation span:nth-child(6) {
+            left: 75%;
+            width: 110px;
+            height: 110px;
+            animation-delay: 3s;
+        }
+
+        .bg-animation span:nth-child(7) {
+            left: 35%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 7s;
+        }
+
+        .bg-animation span:nth-child(8) {
+            left: 50%;
+            width: 25px;
+            height: 25px;
+            animation-delay: 15s;
+            animation-duration: 45s;
+        }
+
+        .bg-animation span:nth-child(9) {
+            left: 20%;
+            width: 15px;
+            height: 15px;
+            animation-delay: 2s;
+            animation-duration: 35s;
+        }
+
+        .bg-animation span:nth-child(10) {
+            left: 85%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 0s;
+            animation-duration: 11s;
+        }
+
+        @keyframes animate {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+                border-radius: 0;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 50%;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tool-info {
+                width: 90%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI Tools Hub</h1>
+            <p>Explore cutting-edge AI tools to enhance your productivity and creativity</p>
+        </div>
+        
+        <div class="boxes">
+            <div id="circle">
+                <!-- AI Tools Icons -->
+                <div class="box" id="box1">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="box" id="box2">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <div class="box" id="box3">
+                    <i class="fa-solid fa-image"></i>
+                </div>
+                <div class="box" id="box4">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+                <div class="box" id="box5">
+                    <i class="fa-solid fa-language"></i>
+                </div>
+                <div class="box" id="box6">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div class="box" id="box7">
+                    <i class="fa-solid fa-microphone"></i>
+                </div>
+                <div class="box" id="box8">
+                    <i class="fa-solid fa-video"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Star button positioned outside the circle -->
+        <button id="star" onclick="show()"><i class="fa-solid fa-star"></i></button>
+        
+        <div class="footer">
+            <a href="index.html">← Back to website</a>
+        </div>
+        
+        <!-- Tool Info Panel -->
+        <div class="tool-info" id="toolInfo">
+            <h2 id="toolTitle">AI Tool</h2>
+            <p id="toolDescription">Description of the AI tool will appear here.</p>
+            <a href="#" class="btn" id="toolLink" target="_blank">Visit Tool</a>
+            <button class="back-btn" onclick="closeToolInfo()">Close</button>
+        </div>
+        
+        <!-- Background Animation -->
+        <div class="bg-animation">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <audio src="./audio/click.wav" id="click" preload="auto"></audio>
+
+    <script>
+        let l = 1;
+        let colors = ["#6C63FF", "#FF6B6B", "#6BCF7F", "#FFD93D", "#4D96FF", "#FF9F45", "#9D4EDD", "#FF5C8D"];
+        
+        // AI Tools Data
+        const aiTools = [
+            {
+                id: 1,
+                title: "ChatGPT",
+                description: "Advanced conversational AI that can assist with writing, problem-solving, and information retrieval. Perfect for brainstorming ideas and getting answers to complex questions.",
+                link: "https://chat.openai.com",
+                icon: "fa-robot"
+            },
+            {
+                id: 2,
+                title: "TensorFlow",
+                description: "Open-source machine learning framework for building and training ML models. Widely used for research and production applications.",
+                link: "https://www.tensorflow.org",
+                icon: "fa-brain"
+            },
+            {
+                id: 3,
+                title: "DALL-E",
+                description: "AI image generation tool that creates unique visuals from text descriptions. Transform your ideas into stunning artwork.",
+                link: "https://openai.com/dall-e-2",
+                icon: "fa-image"
+            },
+            {
+                id: 4,
+                title: "GitHub Copilot",
+                description: "AI pair programmer that helps you write code faster. Suggests whole lines or entire functions as you type.",
+                link: "https://github.com/features/copilot",
+                icon: "fa-code"
+            },
+            {
+                id: 5,
+                title: "Google Translate",
+                description: "AI-powered translation service supporting over 100 languages. Break down language barriers with accurate translations.",
+                link: "https://translate.google.com",
+                icon: "fa-language"
+            },
+            {
+                id: 6,
+                title: "Tableau",
+                description: "Data visualization tool with AI capabilities for creating interactive dashboards and uncovering insights from your data.",
+                link: "https://www.tableau.com",
+                icon: "fa-chart-line"
+            },
+            {
+                id: 7,
+                title: "Otter.ai",
+                description: "AI-powered transcription service that converts speech to text in real-time. Perfect for meetings, interviews, and lectures.",
+                link: "https://otter.ai",
+                icon: "fa-microphone"
+            },
+            {
+                id: 8,
+                title: "Runway ML",
+                description: "Creative toolkit with AI tools for video editing, image generation, and multimedia content creation.",
+                link: "https://runwayml.com",
+                icon: "fa-video"
+            }
+        ];
+
+        function show() {
+            if (l) {
+                l = 0;
+                
+                for (let i = 0; i < 8; i++) {
+                    const box = document.getElementById(`box${i+1}`);
+                    box.style.color = colors[i];
+                    box.style.background = "#1a1a2e";
+                    box.style.borderColor = colors[i];
+                    box.style.boxShadow = "0 0 10px " + colors[i] + ",0 0 20px " + colors[i] + ",0 0 40px " + colors[i] + ",0 0 80px " + colors[i] + ",0 0 160px " + colors[i];
+                    box.classList.add("ani");
+                    
+                    // Add click event to each box
+                    box.onclick = function() {
+                        showToolInfo(i);
+                    };
+                }
+                document.getElementById("star").style.color = "white";
+                document.getElementById("star").style.textShadow = "0 0 20px gold, 0 0 30px gold, 0 0 50px gold, 0 0 90px gold, 0 0 170px gold";
+                // Removed scale animation - star stays constant size
+                document.getElementById("circle").style.width = `60vmin`;
+                document.getElementById("circle").style.height = `60vmin`;
+                setTimeout(() => {
+                    document.getElementById("circle").style.width = `80vmin`;
+                    document.getElementById("circle").style.height = `80vmin`;
+                }, 2000);
+            } else {
+                l = 1;
+                
+                for (let i = 0; i < 8; i++) {
+                    const box = document.getElementById(`box${i+1}`);
+                    box.style.color = "transparent";
+                    box.style.background = "white";
+                    box.style.borderColor = "transparent";
+                    box.style.boxShadow = "0 0 10px #6C63FF, 0 0 20px #6C63FF";
+                    box.classList.remove("ani");
+                    
+                    // Hide icons when collapsed
+                    box.querySelector('i').style.opacity = '0';
+                    
+                    // Remove click events when collapsed
+                    box.onclick = null;
+                }
+                document.getElementById("star").style.color = "#6C63FF";
+                document.getElementById("star").style.textShadow = "none";
+                // Removed scale animation - star stays constant size
+                document.getElementById("circle").style.width = `60vmin`;
+                document.getElementById("circle").style.height = `60vmin`;
+                setTimeout(() => {
+                    document.getElementById("circle").style.width = `8vmin`;
+                    document.getElementById("circle").style.height = `8vmin`;
+                }, 1000);
+                
+                // Close tool info if open
+                closeToolInfo();
+            }
+        }
+
+        function showToolInfo(index) {
+            const tool = aiTools[index];
+            document.getElementById("toolTitle").textContent = tool.title;
+            document.getElementById("toolDescription").textContent = tool.description;
+            document.getElementById("toolLink").href = tool.link;
+            document.getElementById("toolInfo").style.display = "flex";
+            sound();
+        }
+
+        function closeToolInfo() {
+            document.getElementById("toolInfo").style.display = "none";
+            sound();
+        }
+
+        function sound() {
+            document.getElementById("click").play();
+        }
+    </script>
+</body>
+</html>
