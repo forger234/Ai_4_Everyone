@@ -75,12 +75,6 @@ AI assisted by **generating story concepts, creating illustrations, writing code
 
 ---
 
-## 📸 Screenshots
-
-> *(Add your screenshots here if needed)*
-
----
-
 ## 🙌 Credits
 
 All media, pages, and interactions were created by the developer with support from **AI-powered tools** for story generation, coding, asset creation, and optimization.
