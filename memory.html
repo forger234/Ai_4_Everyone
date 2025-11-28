@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Card Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to right, #ff9966, #ff5e62);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        #timer {
+            color: #ffcc00;
+        }
+
+        #moves {
+            color: #4cd964;
+        }
+
+        #matches {
+            color: #5ac8fa;
+        }
+
+        #game {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 10px;
+            perspective: 1000px;
+            margin: 20px 0;
+        }
+
+        .card {
+            position: relative;
+            width: 100%;
+            height: 100px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card.matched {
+            animation: disappearCard 0.8s forwards;
+            pointer-events: none;
+        }
+
+        .card .front,
+        .card .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+        }
+
+        .card .front {
+            background: linear-gradient(135deg, #3498db, #8e44ad);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .card .back {
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            color: white;
+            transform: rotateY(180deg);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #restart {
+            background: linear-gradient(135deg, #4cd964, #5ac8fa);
+            color: white;
+        }
+
+        #back-btn {
+            background: linear-gradient(135deg, #ff9500, #ff5e3a);
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .instructions h2 {
+            margin-bottom: 15px;
+            text-align: center;
+            color: #ffcc00;
+        }
+
+        .instructions ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .instructions i {
+            margin-right: 10px;
+            color: #ffcc00;
+        }
+
+        .win-animation {
+            animation: winPulse 1.5s infinite;
+        }
+
+        @keyframes winPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes disappearCard {
+            0% { 
+                transform: rotateY(180deg) scale(1);
+                opacity: 1;
+            }
+            50% { 
+                transform: rotateY(180deg) scale(1.2);
+                opacity: 0.7;
+            }
+            100% { 
+                transform: rotateY(180deg) scale(0);
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            #game {
+                grid-template-columns: repeat(5, 1fr);
+                grid-gap: 8px;
+            }
+            
+            .card {
+                height: 70px;
+            }
+            
+            .card .front,
+            .card .back {
+                font-size: 1.8rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #game {
+                grid-template-columns: repeat(5, 1fr);
+                grid-gap: 5px;
+            }
+            
+            .card {
+                height: 60px;
+            }
+            
+            .card .front,
+            .card .back {
+                font-size: 1.5rem;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Memory Card Game</h1>
+        <p class="subtitle">Match all pairs to win!</p>
+        
+        <div class="game-info">
+            <div class="info-item">
+                <span class="info-label">Time</span>
+                <span id="timer" class="info-value">00:00</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Moves</span>
+                <span id="moves" class="info-value">0</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Matches</span>
+                <span id="matches" class="info-value">0/12</span>
+            </div>
+        </div>
+        
+        <div id="game"></div>
+        
+        <div id="message"></div>
+        
+        <div class="controls">
+            <button id="restart">
+                <i class="fas fa-redo"></i> Restart Game
+            </button>
+            <button id="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+        </div>
+        
+        <div class="instructions">
+            <h2>How to Play</h2>
+            <ul>
+                <li><i class="fas fa-mouse-pointer"></i> Click on cards to flip them</li>
+                <li><i class="fas fa-puzzle-piece"></i> Find matching pairs of symbols</li>
+                <li><i class="fas fa-check-circle"></i> Matched cards will disappear</li>
+                <li><i class="fas fa-clock"></i> Complete the game as fast as possible</li>
+                <li><i class="fas fa-trophy"></i> Match all 12 pairs to win!</li>
+            </ul>
+        </div>
+    </div>
+
+    <audio id="flipSound" src="./one-page-book-flip-101928.mp3"></audio>
+    <audio id="matchSound" src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3"></audio>
+    <audio id="winSound" src="./pop-win-casino-winning-398059.mp3"></audio>
+
+    <script>
+        // Game symbols - 12 pairs for 5x5 grid (24 cards + 1 extra)
+        const symbols = ['🍎', '🍌', '🍇', '🍉', '🍒', '🥝', '🍍', '🍓', '🍊', '🍋', '🥭', '🍐', '❓'];
+        let cardsArray = [];
+        let game = document.getElementById('game');
+        let message = document.getElementById('message');
+        let timerDisplay = document.getElementById('timer');
+        let movesDisplay = document.getElementById('moves');
+        let matchesDisplay = document.getElementById('matches');
+        let restartBtn = document.getElementById('restart');
+        let backBtn = document.getElementById('back-btn');
+        
+        let flippedCards = [];
+        let matchedCardsCount = 0;
+        let blockClick = false;
+        let moves = 0;
+        let timer = 0;
+        let timerInterval;
+        let totalPairs = 12;
+
+        // Sound elements
+        const flipSound = document.getElementById('flipSound');
+        const matchSound = document.getElementById('matchSound');
+        const winSound = document.getElementById('winSound');
+
+        function shuffle(array) {
+            for(let i = array.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function createCard(symbol) {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.innerHTML = `
+                <div class="front"></div>
+                <div class="back">${symbol}</div>
+            `;
+            card.symbol = symbol;
+            card.addEventListener('click', () => {
+                if (blockClick || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+                flipCard(card);
+            });
+            return card;
+        }
+
+        function flipCard(card) {
+            // Play flip sound
+            flipSound.currentTime = 0;
+            flipSound.play();
+            
+            card.classList.add('flipped');
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                blockClick = true;
+                moves++;
+                movesDisplay.textContent = moves;
+                
+                if (flippedCards[0].symbol === flippedCards[1].symbol) {
+                    // Match found - cards will disappear
+                    setTimeout(() => {
+                        flippedCards.forEach(card => {
+                            card.classList.add('matched');
+                        });
+                        
+                        // Play match sound
+                        matchSound.currentTime = 0;
+                        matchSound.play();
+                        
+                        matchedCardsCount++;
+                        matchesDisplay.textContent = `${matchedCardsCount}/${totalPairs}`;
+                        flippedCards = [];
+                        blockClick = false;
+                        
+                        if (matchedCardsCount === totalPairs) {
+                            endGame();
+                        }
+                    }, 500);
+                } else {
+                    // No match - flip cards back
+                    setTimeout(() => {
+                        flippedCards.forEach(card => card.classList.remove('flipped'));
+                        flippedCards = [];
+                        blockClick = false;
+                    }, 1000);
+                }
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timer = 0;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timer++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timer / 60);
+            const seconds = timer % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            
+            // Play win sound
+            winSound.currentTime = 0;
+            winSound.play();
+            
+            message.textContent = `Congratulations! You won in ${moves} moves and ${timer} seconds! 🎉`;
+            message.classList.add('win-animation');
+            
+            // Add confetti effect
+            createConfetti();
+        }
+
+        function createConfetti() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+            const confettiCount = 150;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.top = '-20px';
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.opacity = Math.random() + 0.5;
+                confetti.style.zIndex = '9999';
+                document.body.appendChild(confetti);
+                
+                const animation = confetti.animate([
+                    { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translate(${Math.random() * 100 - 50}px, ${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: Math.random() * 3000 + 2000,
+                    easing: 'cubic-bezier(0.1, 0.8, 0.2, 1)'
+                });
+                
+                animation.onfinish = () => {
+                    confetti.remove();
+                };
+            }
+        }
+
+        function setupGame() {
+            // Create 12 pairs of symbols
+            let gameSymbols = [];
+            for (let i = 0; i < totalPairs; i++) {
+                gameSymbols.push(symbols[i]);
+                gameSymbols.push(symbols[i]);
+            }
+            
+            // Add one extra card to make 25 cards (5x5 grid)
+            gameSymbols.push(symbols[12]); // The '❓' symbol
+            
+            cardsArray = shuffle(gameSymbols);
+            
+            game.innerHTML = '';
+            cardsArray.forEach(symbol => {
+                game.appendChild(createCard(symbol));
+            });
+            
+            message.textContent = 'Find all matching pairs!';
+            message.classList.remove('win-animation');
+            
+            flippedCards = [];
+            matchedCardsCount = 0;
+            moves = 0;
+            movesDisplay.textContent = moves;
+            matchesDisplay.textContent = `0/${totalPairs}`;
+            blockClick = false;
+            
+            startTimer();
+        }
+
+        // Event listeners
+        restartBtn.addEventListener('click', setupGame);
+        
+        backBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+        // Initialize the game
+        setupGame();
+    </script>
+</body>
+</html>

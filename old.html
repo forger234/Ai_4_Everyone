@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Tales: Stories for Seniors</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', serif;
+        }
+
+        :root {
+            --primary: #8B4513;
+            --secondary: #D2B48C;
+            --accent: #CD853F;
+            --light: #F5F5DC;
+            --dark: #654321;
+            --text: #333333;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        /* Back Button */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Navigation */
+        .nav-container {
+            background-color: var(--secondary);
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .story-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .story-nav a {
+            color: var(--dark);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .story-nav a:hover, .story-nav a.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Main Content */
+        main {
+            padding: 3rem 0;
+        }
+
+        .story-section {
+            margin-bottom: 4rem;
+            display: none;
+        }
+
+        .story-section.active {
+            display: block;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .story-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .story-title {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .story-meta {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            font-style: italic;
+            flex-wrap: wrap;
+        }
+
+        .story-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .story-content p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .story-image {
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            background-color: var(--secondary);
+            border-radius: 8px;
+            margin: 1.5rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            font-size: 4rem;
+            opacity: 1;
+            overflow: hidden;
+        }
+
+        .story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Font Controls */
+        .font-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 50px;
+            padding: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+
+        .font-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .font-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .back-button {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 1rem;
+                align-self: flex-start;
+            }
+            
+            .story-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .story-card {
+                padding: 1.5rem;
+            }
+            
+            .story-title {
+                font-size: 1.7rem;
+            }
+            
+            .story-meta {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .story-content p {
+                text-align: left;
+            }
+            
+            .font-controls {
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .story-image {
+                height: 200px;
+                font-size: 3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .story-card {
+                padding: 1rem;
+            }
+            
+            .story-title {
+                font-size: 1.5rem;
+            }
+            
+            .story-image {
+                height: 150px;
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <button class="back-button" onclick="window.location.href='index.html'">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <h1>Golden Tales</h1>
+                <p class="tagline">Heartwarming Stories for the Young at Heart</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="nav-container">
+        <div class="container">
+            <nav class="story-nav">
+                <a href="#" class="nav-link active" data-target="story1">The Garden of Memories</a>
+                <a href="#" class="nav-link" data-target="story2">The Clockmaker's Secret</a>
+                <a href="#" class="nav-link" data-target="story3">Letters from the Past</a>
+                <a href="#" class="nav-link" data-target="story4">The Wisdom of Old Henry</a>
+            </nav>
+        </div>
+    </div>
+
+    <main class="container">
+        <!-- Story 1 -->
+        <section id="story1" class="story-section active">
+            <div class="story-card">
+                <h2 class="story-title">The Garden of Memories</h2>
+                <div class="story-meta">
+                    <span><i class="fas fa-user"></i> By Eleanor Williams</span>
+                    <span><i class="fas fa-clock"></i> 12 min read</span>
+                </div>
+                <div class="story-image">
+                    <img src="./memory story.png" alt="Garden Icon">
+                </div>
+                <div class="story-content">
+                    <p>At eighty-seven, Martha believed she had experienced all the surprises life had to offer. That was until she discovered the peculiar seed packet tucked inside her late husband's old gardening book. The faded label read "Memoria Flora" with instructions that simply stated: "Plant with intention and water with remembrance."</p>
+                    
+                    <p>With nothing to lose and curiosity piqued, Martha prepared a small patch in her backyard that had lain fallow since Arthur's passing. She planted the tiny, iridescent seeds while thinking of her wedding day—the way Arthur's hands had trembled slightly as he slipped the ring on her finger.</p>
+                    
+                    <p>To her astonishment, within days, vibrant shoots emerged. By week's end, flowers bloomed that Martha had never seen before—petals that shifted color in the light and emitted a faint, familiar scent that reminded her of Arthur's favorite pipe tobacco.</p>
+                    
+                    <p>As different memories came to mind while tending her unusual garden, new flowers appeared. A cluster of blue blossoms shaped like tiny sailboats emerged when she remembered their honeymoon on the coast. Delicate white flowers with silver edges bloomed when she recalled their daughter's christening.</p>
+                    
+                    <p>The real miracle happened when her grandchildren visited. Seven-year-old Liam, who had never met his grandfather, pointed at a particularly vibrant flower and said, "That one smells like cinnamon and wood, just like you always say Grandpa did."</p>
+                    
+                    <p>Word of Martha's magical garden spread quietly through the neighborhood. Soon, other seniors began visiting with their own memories to share. Martha discovered that when others shared their stories near certain plants, new hybrid flowers would sometimes appear—beautiful combinations of different people's cherished moments.</p>
+                    
+                    <p>What started as a solitary activity became a community gathering. Every Tuesday afternoon, Martha's garden filled with elders sharing stories, laughter, and sometimes tears, as the Memoria Flora bloomed around them, creating a living tapestry of their collective memories.</p>
+                    
+                    <p>Martha realized the garden wasn't just about preserving the past—it was about planting new memories too. And so, she began intentionally creating moments worth remembering, knowing they would blossom again in her magical garden.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Story 2 -->
+        <section id="story2" class="story-section">
+            <div class="story-card">
+                <h2 class="story-title">The Clockmaker's Secret</h2>
+                <div class="story-meta">
+                    <span><i class="fas fa-user"></i> By Benjamin Carter</span>
+                    <span><i class="fas fa-clock"></i> 15 min read</span>
+                </div>
+                <div class="story-image">
+                    <img src="./clockmaker story.png" alt="Clock Icon">
+                </div>
+                <div class="story-content">
+                    <p>For sixty years, Mr. Henderson had maintained his tiny clock repair shop on Oak Street, a place where time seemed to stand still. At eighty-two, he knew every clock in the neighborhood—not just their mechanisms, but their stories too.</p>
+                    
+                    <p>The grandfather clock in the corner of his shop had been his first major restoration—a wedding gift for his beloved Clara. The delicate porcelain clock on the shelf had belonged to Mrs. Gable, who brought it in every year for cleaning until she passed at ninety-four. The cuckoo clock with the mischievous bird was from the Schmidt family, who had emigrated from Germany after the war.</p>
+                    
+                    <p>What nobody knew was that Mr. Henderson possessed a unique gift. He could hear the memories trapped within the timepieces—echoes of conversations, laughter, tears, and milestones that had occurred in their presence.</p>
+                    
+                    <p>The antique pocket watch from Mr. Peterson held the nervous excitement of a marriage proposal. The schoolhouse clock from the old elementary school echoed with children's recitations and the final bell of summer. The elegant mantel clock from the mayor's office contained decades of important decisions and whispered secrets.</p>
+                    
+                    <p>One rainy afternoon, a young woman brought in a broken music box that had belonged to her grandmother. As Mr. Henderson carefully opened it, he was overwhelmed by a beautiful memory—a young couple dancing in a moonlit garden, the very night they fell in love.</p>
+                    
+                    <p>The woman, noticing his faraway look, asked if he could fix it. "It was my grandmother's," she explained. "She always said it played the song she and grandfather danced to on their first date."</p>
+                    
+                    <p>Mr. Henderson not only repaired the mechanism but also shared the memory he'd experienced. The woman's eyes filled with tears. "That's exactly how Grandma described it," she whispered. "How could you know?"</p>
+                    
+                    <p>Word of his unusual ability spread, and soon people came not just for clock repairs, but to hear the stories their timepieces held. A widow learned that her late husband had secretly recorded a message for her in their anniversary clock. A family discovered that their heirloom grandfather clock had witnessed five generations of their family's history.</p>
+                    
+                    <p>As Mr. Henderson grew older, he worried about what would happen to his gift. Then he noticed something remarkable—his young apprentice, Maya, began describing the "feelings" she got from certain clocks. The gift was passing on.</p>
+                    
+                    <p>In his final years, Mr. Henderson continued his work, content in knowing that the stories contained in all those clocks would not be lost to time. And in the quiet of his shop, surrounded by the gentle ticking of dozens of timepieces, he continued to listen to the memories, preserving them one clock at a time.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Story 3 -->
+        <section id="story3" class="story-section">
+            <div class="story-card">
+                <h2 class="story-title">Letters from the Past</h2>
+                <div class="story-meta">
+                    <span><i class="fas fa-user"></i> By Grace Henderson</span>
+                    <span><i class="fas fa-clock"></i> 10 min read</span>
+                </div>
+                <div class="story-image">
+                    <img src="./letters story.png" alt="Letters Icon">
+                </div>
+                <div class="story-content">
+                    <p>When the Maple Creek Retirement Home announced it would be closing after fifty years, the residents faced the difficult task of sorting through decades of accumulated belongings. For 89-year-old Rose, this meant finally confronting the trunk full of letters she'd been carrying with her for sixty years.</p>
+                    
+                    <p>The letters were from Thomas, her first love, written during the war. They had planned to marry when he returned, but Thomas never came home. Rose had kept every letter, tied with a faded blue ribbon, moving them from home to home, never able to part with them but never able to reread them either.</p>
+                    
+                    <p>As Rose sat with the trunk in her new, smaller apartment, she noticed something peculiar. The once-crisp envelopes now felt strangely warm to the touch. When she lifted the bundle, a faint scent of Thomas' cologne—something she hadn't smelled in six decades—wafted from the papers.</p>
+                    
+                    <p>Hesitantly, she untied the ribbon and opened the first letter. As her eyes moved across the familiar handwriting, something miraculous happened. The words seemed to lift from the page, and she could hear Thomas' voice reading them to her, just as she remembered from their last meeting.</p>
+                    
+                    <p>Each letter she opened brought with it not just words, but sensations—the warmth of a summer day when she'd first received it, the sound of rain against her window as she'd read it by lamplight, even the taste of the peach she'd been eating when one particularly funny letter arrived.</p>
+                    
+                    <p>Rose discovered that if she focused on a specific memory while holding a letter, she could temporarily return to that moment. She revisited the dance where they'd met, the picnic where he'd proposed, the train station where they'd said goodbye.</p>
+                    
+                    <p>But the most surprising discovery came when she found a letter she'd never opened before—it had been stuck between two others all these years. In it, Thomas confessed that he'd arranged for a friend to deliver letters to her for a year if he didn't return, so she wouldn't be alone in her grief.</p>
+                    
+                    <p>Touched by this final act of love, Rose decided to share her discovery with other residents at her new retirement community. She started a "Letter Circle" where people could bring old correspondence and experience their own memories.</p>
+                    
+                    <p>Mr. Jenkins rediscovered letters from his brother who had moved to Australia fifty years earlier. Mrs. Gupta found comfort in rereading her mother's advice from long ago. Even staff members began participating, bringing in letters from their own families.</p>
+                    
+                    <p>Rose realized that the magic wasn't in the letters themselves, but in the love and connection they represented. At ninety, she began writing letters to her own grandchildren, hoping to create the same kind of lasting connection that Thomas' letters had given her.</p>
+                    
+                    <p>And sometimes, late at night, she would take out Thomas' final letter, hold it to her heart, and for just a moment, feel twenty-one again, standing on a platform waiting for a train that would bring her love home.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Story 4 -->
+        <section id="story4" class="story-section">
+            <div class="story-card">
+                <h2 class="story-title">The Wisdom of Old Henry</h2>
+                <div class="story-meta">
+                    <span><i class="fas fa-user"></i> By Samuel Johnson</span>
+                    <span><i class="fas fa-clock"></i> 14 min read</span>
+                </div>
+                <div class="story-image">
+                    <img src="./henry story.png" alt="Old Man Icon">
+                </div>
+                <div class="story-content">
+                    <p>In the small town of Elmwood, there was a bench in the town square that everyone knew as "Henry's Bench." For thirty years, rain or shine, Old Henry could be found there each afternoon, watching the world go by with a gentle smile and a kind word for anyone who stopped to chat.</p>
+                    
+                    <p>At ninety-four, Henry had outlived most of his contemporaries, but he never seemed lonely. He claimed the secret to his contentment was simple: "I collect moments, not things."</p>
+                    
+                    <p>What townspeople didn't know was that Henry had a special ability. When someone shared a problem with him, he could see potential futures unfolding like branches on a tree. He'd learned long ago that he couldn't change people's paths, but he could help them see the possibilities more clearly.</p>
+                    
+                    <p>One Tuesday, young Emily sat beside him, crying over a failed business venture. Henry listened patiently, then said, "Tell me, if success was guaranteed, what would you try next?"</p>
+                    
+                    <p>As Emily described her dream of opening a bookstore with a small café, Henry saw the futures branching out. In one, she played it safe and remained unhappy in her corporate job. In another, she took the risk and struggled initially but found unexpected help from a retired teacher who became her business partner.</p>
+                    
+                    <p>Henry didn't tell Emily what he saw. Instead, he asked questions that guided her toward recognizing her own strengths and the resources available to her. Six months later, Emily's "Chapter & Cup" bookstore opened to much celebration, with Henry as her first customer.</p>
+                    
+                    <p>Then there was Mr. Davis, who at seventy-eight was considering selling the family home he'd lived in for fifty years. Henry listened as Davis described his dilemma—the house was too big, but filled with memories.</p>
+                    
+                    <p>As Davis spoke, Henry saw futures where the house became a burden, and others where it transformed into a gathering place for family. He gently suggested that Davis might consider not selling, but instead inviting his granddaughter and her young family to live with him.</p>
+                    
+                    <p>A year later, the old house was filled with laughter again, and Mr. Davis had a new lease on life as a great-grandfather actively involved in raising the next generation.</p>
+                    
+                    <p>Henry's most challenging visitor was Sarah, a woman his own age who was struggling with regrets about paths not taken. As she listed her "what ifs," Henry saw something remarkable—the countless small lives she had touched positively through her work as a nurse, her volunteer efforts, and her kindness to neighbors.</p>
+                    
+                    <p>"Sarah," he said gently, "look around this park. How many people here have you helped in some way?" As she looked, person after person smiled and waved—former patients, neighbors she'd cooked for during hard times, children she'd comforted when they fell.</p>
+                    
+                    <p>Sarah realized that while she'd been focused on the path not taken, she'd missed the beauty of the path she had traveled.</p>
+                    
+                    <p>As Henry grew older, he began to worry about who would take his place on the bench. Then he noticed something interesting—people who had received his advice were now giving similar guidance to others. Emily was mentoring young entrepreneurs. Mr. Davis had started a "grandparents advice" program at the community center. Sarah was leading a group for seniors dealing with regret.</p>
+                    
+                    <p>Henry realized his legacy wasn't about finding one person to replace him, but about the wisdom he'd helped others discover in themselves. And so he continued to sit on his bench, watching the branches of possibility grow, content in knowing that the town of Elmwood would always have someone willing to listen and help others find their way.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="font-controls">
+        <button class="font-btn" id="font-smaller">A-</button>
+        <button class="font-btn" id="font-reset">A</button>
+        <button class="font-btn" id="font-larger">A+</button>
+    </div>
+
+    
+
+    <script>
+        // Navigation functionality
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links and sections
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                document.querySelectorAll('.story-section').forEach(s => s.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Show corresponding section
+                const targetId = this.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+                
+                // Scroll to top of stories
+                document.querySelector('main').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Font size controls
+        let currentFontSize = 18;
+
+        document.getElementById('font-smaller').addEventListener('click', function() {
+            if (currentFontSize > 14) {
+                currentFontSize -= 2;
+                document.body.style.fontSize = currentFontSize + 'px';
+            }
+        });
+
+        document.getElementById('font-reset').addEventListener('click', function() {
+            currentFontSize = 18;
+            document.body.style.fontSize = currentFontSize + 'px';
+        });
+
+        document.getElementById('font-larger').addEventListener('click', function() {
+            if (currentFontSize < 24) {
+                currentFontSize += 2;
+                document.body.style.fontSize = currentFontSize + 'px';
+            }
+        });
+    </script>
+</body>
+</html>
